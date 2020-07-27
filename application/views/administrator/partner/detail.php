@@ -1,0 +1,92 @@
+<div class="page-breadcrumb">
+    <div class="row">
+        <div class="col-5 align-self-center">
+            <h4 class="page-title">Detail Partner</h4>
+        </div>
+        <div class="col-7 align-self-center">
+            <div class="d-flex align-items-center justify-content-end">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="#/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="#/partner">Partner</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page"><?= $id ?></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card" id="detail_container">
+                <div class="card-body" id="main_content">
+                    <div class="text-center">
+                        <i class="fa fa-spinner fa-spin fa-5x mb-3"></i>
+                        <h1>Loading</h1>
+                        <h4>Silahkan tunggu...</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="form_delete">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete Partner</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4><b>Are You Sure?</b></h4>
+                    <p><b id="delete_desc"></b> will removed from table permanently.</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="delete_id" name="delete_id">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form id="form_delete_detail">
+    <div id="modal_delete_detail" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Delete <span id="delete_title">...</span></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4><b>Are You Sure?</b></h4>
+                    <p><b id="delete_desc_detail"></b> will removed from table permanently.</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="delete_id" name="delete_id_detail">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-info waves-effect waves-light">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<footer class="footer text-center">
+    Develop Using Framework MIT License Codeigniter copyright (c) 2014 - 2019. British Columbia Institute of Technology.
+</footer>
+
+<script type="module">
+    import partnerController from '<?= base_url() ?>src/administrator/modules/partner.js';
+    partnerController.detail('<?= $this->session->userdata('api_token') ?>', <?= $id ?>)
+</script>
