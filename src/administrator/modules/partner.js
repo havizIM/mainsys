@@ -1844,6 +1844,8 @@ const partnerController = ((SET, DT, UI, LU) => {
                     ],
                     order: [[0, "asc"]]
                 })
+
+                DT.dtResponsive()
             }
 
             if (container.contains($('#t_procedure')[0])) {

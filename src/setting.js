@@ -201,7 +201,6 @@ const settingController = (() => {
 })()
 
 const dtController = (() => {
-
     const _filterEvent = table => {
         $('#form_filter').on('submit', function (e) {
             e.preventDefault()
@@ -243,6 +242,13 @@ const dtController = (() => {
     }
 
     return {
+        dtResponsive: () => {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                $($.fn.dataTable.tables(true)).DataTable()
+                    .columns.adjust()
+                    .responsive.recalc();
+            });
+        },
         dtFilter: table => {
             _filterEvent(table);
             _resetFilter(table);

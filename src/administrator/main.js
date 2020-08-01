@@ -135,13 +135,6 @@ const mainController = ((SET, UI) => {
     return {
         init: TOKEN => {
             _welcomePanel(TOKEN)
-
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-                $($.fn.dataTable.tables(true)).DataTable()
-                    .columns.adjust()
-                    .responsive.recalc();
-            });
-
             _logoutApp()
             _panelLog(TOKEN)
             _setRoute()
