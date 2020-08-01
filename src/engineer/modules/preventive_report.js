@@ -101,7 +101,7 @@ const preventiveReportUI = ((SET) => {
                                 <table width="100%">
                                     <tr>
                                         <td style="width: 50%"></td>
-                                        <td style="width: 50%">
+                                        <td style="width: 50%" class="text-center">
                                             ${data.approved_by !== null && data.signature !== null ? `
                                                 <h5 class="text-center">Approved By ,</h5>
                                                 <a target="__blank" href="${data.signature === null ? `${SET.baseURL()}assets/images/detail.svg` : `${SET.apiURL()}preventive_signature/file/${data.signature}`}"> <img class="img-responsive" alt="attachment" src="${data.signature === null ? `${SET.baseURL()}assets/images/detail.svg` : `${SET.apiURL()}preventive_signature/file/${data.signature}`}"> </a>
