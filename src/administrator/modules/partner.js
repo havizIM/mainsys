@@ -29,7 +29,7 @@ const partnerUI = ((SET) => {
                         <textarea name="tools[${count}]" id="tools_${count}" data-id="${count}" class="form-control" rows="1"></textarea>
                     </td>
                     <td>
-                        <button class="btn btn-danger btn-md btn-remove btn_remove_row" type="button" id="" data-id="${count}" data-remove="true"><i class="fa fa-times"></i></button>
+                        <button class="btn btn-danger btn-md btn-remove btn_remove_row" type="button" data-id="${count}" data-remove="true"><i class="fa fa-times"></i></button>
                     </td>
                 </tr>
             `
@@ -1234,10 +1234,1160 @@ const partnerUI = ((SET) => {
 
             $('#main_content').html(html)
         },
+
+        renderEdit: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="contact_name">Partner Name</label>
+                                            <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.partner_name}">
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Phone</label>
+                                                <input type="text" class="form-control" id="phone" name="phone" value="${data.phone}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">Fax</label>
+                                                <input type="text" class="form-control" id="fax" name="fax" value="${SET.filterNull(data.fax)}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Handphone</label>
+                                                <input type="text" class="form-control" id="handphone" name="handphone" value="${SET.filterNull(data.handphone)}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">Email</label>
+                                                <input type="text" class="form-control" id="email" name="email" value="${SET.filterNull(data.email)}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Website</label>
+                                                <input type="text" class="form-control" id="website" name="website" value="${SET.filterNull(data.website)}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">NPWP</label>
+                                                <input type="text" class="form-control" id="npwp" name="npwp" value="${SET.filterNull(data.npwp)}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Address</label>
+                                            <textarea class="form-control" id="address" name="address">${data.address}</textarea>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="phone">City</label>
+                                                <select class="form-control" id="city_id" name="city_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="fax">Province</label>
+                                                <select class="form-control" id="province_id" name="province_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Other Information</label>
+                                            <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                        </div>
+                                        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="picture">Logo</label>
+                                        <input type="file" class="dropify" name="logo" id="logo" ${data.logo === null ? '' : `data-default-file="${SET.apiURL()}partner/file/${data.logo}`}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+            $('#main_content').html(html)
+        },
+
+        renderEditPartnerUser: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="contact_name">Full Name</label>
+                                        <input type="text" class="form-control" id="full_name" name="full_name" value="${data.full_name}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact_name">Position</label>
+                                        <input type="text" class="form-control" id="position" name="position" value="${data.position}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pic">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone" value="${data.phone}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pic">Email</label>
+                                        <input type="text" class="form-control" id="email" name="email" value="${data.user.email}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memo">Address</label>
+                                        <textarea class="form-control" id="address" name="address">${data.address}</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memo">Other Information</label>
+                                        <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <fieldset>
+                                        <legend>Partner</legend>
+                                        <div class="form-group">
+                                            <label for="contact_name">Partner Name</label>
+                                            <input type="hidden" name="partner_id" id="partner_id" value="${data.partner.id}">
+                                            <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.partner.partner_name}" readonly>
+                                        </div>
+                                    </fieldset>
+
+                                    <br>
+
+                                    <fieldset>
+                                        <legend>Account</legend>
+                                        <div class="form-group">
+                                            <label for="contact_name">Username</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="${data.user.username}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Status</label>
+                                            <select class="form-control" id="active" name="active">
+                                                <option value="">-- Choose --</option>
+                                                <option value="Y">Active</option>
+                                                <option value="N">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
+
+        renderEditCategory: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="contact_name">Partner</label>
+                                        <input type="hidden" id="partner_id" name="partner_id" value="${data.partner.id}">
+                                        <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.partner.partner_name}" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="contact_name">Category Name</label>
+                                        <input type="text" class="form-control" id="category_name" name="category_name" value="${data.category_name}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memo">Other Information</label>
+                                        <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
+
+        renderEditBuilding: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="contact_name">Partner Name</label>
+                                            <input type="hidden" name="partner_id" id="partner_id" value="${data.partner.id}">
+                                            <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.partner.partner_name}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Building Name</label>
+                                            <input type="text" class="form-control" id="building_name" name="building_name" value="${data.building_name}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Type</label>
+                                            <input type="text" class="form-control" id="type" name="type" value="${data.type}">
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-4">
+                                                <label for="pic">Phone</label>
+                                            <input type="text" class="form-control" id="phone" name="phone" value="${data.phone}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="pic">Fax</label>
+                                                <input type="text" class="form-control" id="fax" name="fax" value="${SET.filterNull(data.fax)}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="pic">Email</label>
+                                                <input type="text" class="form-control" id="email" name="email" value="${data.email}">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Longitude</label>
+                                                <input type="number" class="form-control" id="longitude" name="longitude" value="${SET.filterNull(data.longitude)}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">Latitude</label>
+                                                <input type="number" class="form-control" id="latitude" name="latitude" value="${SET.filterNull(data.latitude)}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Address</label>
+                                            <textarea class="form-control" id="address" name="address">${data.address}</textarea>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="phone">City</label>
+                                                <select class="form-control" id="city_id" name="city_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="fax">Province</label>
+                                                <select class="form-control" id="province_id" name="province_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Other Information</label>
+                                            <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                        </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
+
+        renderEditEquipment: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="contact_name">SKU</label>
+                                            <input type="text" class="form-control" id="sku" name="sku" value="${data.sku}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pic">Equipment Name</label>
+                                            <input type="text" class="form-control" id="equipment_name" name="equipment_name" value="${data.equipment_name}">
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Category</label>
+                                                <select class="form-control" id="category_id" name="category_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">Building</label>
+                                                <select class="form-control" id="building_id" name="building_id">
+                                                    <option value="" disabled="" selected="">-- Choose --</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <label for="pic">Brand</label>
+                                                <input type="text" class="form-control" id="brand" name="brand" value="${SET.filterNull(data.brand)}">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pic">Type</label>
+                                                <input type="text" class="form-control" id="type" name="type" value="${SET.filterNull(data.type)}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Location</label>
+                                            <textarea class="form-control" id="location" name="location">${SET.filterNull(data.location)}</textarea>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="memo">Other Information</label>
+                                            <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                        </div>
+                                        
+                                </div>
+                                <div class="col-md-4">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label for="contact_name">Partner Name</label>
+                                            <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.building.partner.partner_name}" readonly>
+                                        </div>
+                                    </fieldset>
+
+                                    <div class="form-group">
+                                        <label for="picture">Photo</label>
+                                        <input type="file" class="dropify" name="photo" id="photo" ${data.photo === null ? '' : `data-default-file="${SET.apiURL()}equipment/file/${data.photo}`}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pic">Procedure</label>
+                                        <select class="form-control" id="procedure_id" name="procedure_id">
+                                            <option value="" disabled="" selected="">-- Choose --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
+
+        renderEditProcedure: data => {
+            let periode = ['Weekly', 'Monthly', 'Quartal', 'Semester', 'Yearly'];
+
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <fieldset>
+                                        <legend><u>Procedure</u></legend>
+
+                                        <div class="form-group">
+                                            <label for="contact_name">Partner</label>
+                                            <input type="hidden" id="partner_id" name="partner_id" value="${data.partner.id}">
+                                            <input type="text" class="form-control" id="partner_name" name="partner_name" value="${data.partner.partner_name}" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Identifier Name</label>
+                                            <input type="text" class="form-control" id="identifier_name" name="identifier_name" value="${data.identifier_name}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Type</label>
+                                            <input type="text" class="form-control" id="type" name="type" value="${SET.filterNull(data.type)}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="memo">Other Information</label>
+                                            <textarea class="form-control" id="other_information" name="other_information">${SET.filterNull(data.other_information)}</textarea>
+                                        </div>
+                                    </fieldset>
+
+                                    <fieldset>
+                                        <legend><u>Preventive Procedure</u></legend>
+
+                                        <table class="table" id="t_detail">
+                                            <thead>
+                                                <tr>
+                                                    <th>Description</th>
+                                                    <th>Periode</th>
+                                                    <th>Tools</th>
+                                                    <th>
+                                                        <button class="btn btn-info btn-md btn_add_row" type="button" id="btn_add_row"><i class="fa fa-plus"></i></button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${data.preventive_procedures.map((v, index) => {
+                                                    count += 1;
+
+                                                    return `
+                                                        <tr id="row_${count}">
+                                                            <td>
+                                                                <textarea name="description[${count}]" id="description_${count}" data-id="${count}" class="form-control" rows="1" required>${v.description}</textarea>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" id="periode_${count}" name="periode[${count}]" data-id="${count}" required>
+                                                                    <option value="">- Choose -</option>
+                                                                    ${periode.map(x => {
+                                                                        return `<option value="${x}" ${x === v.periode ? 'selected' : ''}>${x}</option>`
+                                                                    }).join('')}
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <textarea name="tools[${count}]" id="tools_${count}" data-id="${count}" class="form-control" rows="1">${SET.filterNull(v.tools)}</textarea>
+                                                            </td>
+                                                            <td>
+                                                                ${index !== 0 ? `<button class="btn btn-danger btn-md btn-remove btn_remove_row" type="button" data-id="${count}" data-remove="true"><i class="fa fa-times"></i></button>` : ''}
+                                                            </td>
+                                                        </tr>
+                                                    `
+                                                }).join('')}
+                                            </tbody>
+                                        </table>
+                                    </fieldset>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/partner/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
     }
 })(settingController)
 
 const partnerController = ((SET, DT, UI, LU) => {
+
+    const _editProcedureObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                _addRow()
+                _removeRow()
+
+                _submitEditProcedure(TOKEN, id)
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEditProcedure = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                partner_id: 'required',
+                identifier_name: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}procedure/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/procedure/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _editEquipmentObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                $('.dropify').dropify()
+
+                $('#category_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}category`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                                partner: data.building.partner.id,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.category_name
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                let option = new Option(data.category.category_name, data.category.id, true, true);
+                $('#category_id').append(option).trigger('change');
+
+                $('#building_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}building`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                                partner: data.building.partner.id,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.building_code + ' | ' + v.building_name
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    },
+                });
+
+                let option2 = new Option(`${data.building.building_code} | ${data.building.building_name}`, data.building.id, true, true);
+                $('#building_id').append(option2).trigger('change');
+
+                $('#procedure_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}procedure`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                                partner: data.building.partner.id,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.identifier_name + ' | ' + v.type
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    },
+                });
+
+                let option3 = new Option(`${data.procedure.identifier_name} | ${data.procedure.type}`, data.procedure.id, true, true);
+                $('#procedure_id').append(option3).trigger('change');
+
+                _submitEditEquipment(TOKEN, id)
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEditEquipment = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                sku: 'required',
+                equipment_name: 'required',
+                building_id: 'required',
+                category_id: 'required',
+                procedure_id: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}equipment/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/equipment/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _editBuildingObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+
+                $('#city_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}city`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.city
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                let option = new Option(data.city.city, data.city.id, true, true);
+                $('#city_id').append(option).trigger('change');
+
+                $('#province_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}province`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.province
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    },
+                });
+
+                let option2 = new Option(data.province.province, data.province.id, true, true);
+                $('#province_id').append(option2).trigger('change');
+
+                _submitEditBuilding(TOKEN, id)
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEditBuilding = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                building_name: 'required',
+                phone: 'required',
+                address: 'required',
+                city_id: 'required',
+                province_id: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}building/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/building/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _editCategoryObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                _submitEditCategory(TOKEN, id)
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEditCategory = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                partner_id: 'required',
+                category_name: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}category/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/${res.results.partner_id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _editObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                $('.dropify').dropify();
+
+                $('#city_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}city`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.city
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                let option = new Option(data.city.city, data.city.id, true, true);
+                $('#city_id').append(option).trigger('change');
+
+                $('#province_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}province`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.province
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    },
+                });
+
+                let option2 = new Option(data.province.province, data.province.id, true, true);
+                $('#province_id').append(option2).trigger('change');
+
+
+                _submitEdit(TOKEN, id)
+            }
+
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEdit = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                partner_name: 'required',
+                phone: 'required',
+                email: 'required',
+                address: 'required',
+                city_id: 'required',
+                province_id: 'required'
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}partner/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _editPartnerUserObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                $('#active').val(data.user.active)
+
+                _submitEditPartnerUser(TOKEN, id)
+            }
+
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEditPartnerUser = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                full_name: 'required',
+                phone: 'required',
+                email: 'required',
+                username: 'required',
+                active: 'required'
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}partner_user/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/partner/user/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
 
     const _openDeleteDetail = (parent, callback) => {
         $(parent).on('click', '.btn-delete-detail', function () {
@@ -2151,7 +3301,6 @@ const partnerController = ((SET, DT, UI, LU) => {
         });
     }
 
-
     const _submitAddUser = TOKEN => {
         $('#form_add').validate({
             errorClass: 'is-invalid',
@@ -2490,6 +3639,42 @@ const partnerController = ((SET, DT, UI, LU) => {
         });
     }
 
+    const _fetchCategory = (TOKEN, id, callback) => {
+        $.ajax({
+            url: `${SET.apiURL()}category/${id}`,
+            type: 'GET',
+            dataType: 'JSON',
+            beforeSend: xhr => {
+                xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+            },
+            success: res => {
+                callback(res.results)
+            },
+            error: ({ responseJSON }) => {
+                toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+            },
+            statusCode: {
+                404: () => {
+                    $('#app_content').load(`${SET.baseURL()}data_not_found`)
+                },
+                401: err => {
+                    let error = err.responseJSON
+
+                    if (error.message === 'Unauthenticated.') {
+                        $('#app_content').load(`${SET.baseURL()}unauthenticated`)
+                    }
+
+                    if (error.message === 'Unauthorized.') {
+                        $('#app_content').load(`${SET.baseURL()}unauthorized`)
+                    }
+                }
+            },
+            complete: () => {
+
+            }
+        })
+    }
+
     const _fetchBuilding = (TOKEN, id, callback) => {
         $.ajax({
             url: `${SET.apiURL()}building/${id}`,
@@ -2674,7 +3859,6 @@ const partnerController = ((SET, DT, UI, LU) => {
 
             if (remove === true && id) {
                 $('#row_' + id).remove();
-                _calculateAll()
             }
         })
     }
@@ -3263,6 +4447,13 @@ const partnerController = ((SET, DT, UI, LU) => {
             })
         }, 
 
+        edit: (TOKEN, id) => {
+            _fetchPartner(TOKEN, id, data => {
+                _editObserver(TOKEN, id, data)
+                UI.renderEdit(data)
+            })
+        },
+
         addUser: (TOKEN, id) => {
             _fetchPartner(TOKEN, id, data => {
                 _addUserObserver(TOKEN, id, data)
@@ -3272,10 +4463,17 @@ const partnerController = ((SET, DT, UI, LU) => {
 
         detailPartnerUser: (TOKEN, id) => {
             _fetchPartnerUser(TOKEN, id, data => {
-                console.log(data)
                 $('#link_back').attr('href', `#/partner/${data.partner.id}`)
                 _detailPartnerUserObserver(TOKEN, id, data)
                 UI.renderDetailPartnerUser(data)
+            })
+        },
+
+        editPartnerUser: (TOKEN, id) => {
+            _fetchPartnerUser(TOKEN, id, data => {
+                $('#link_back').attr('href', `#/partner/${data.partner.id}`)
+                _editPartnerUserObserver(TOKEN, id, data)
+                UI.renderEditPartnerUser(data)
             })
         },
 
@@ -3283,6 +4481,14 @@ const partnerController = ((SET, DT, UI, LU) => {
             _fetchPartner(TOKEN, id, data => {
                 _addCategoryObserver(TOKEN, id, data)
                 UI.renderAddCategory(data)
+            })
+        },
+
+        editCategory: (TOKEN, id) => {
+            _fetchCategory(TOKEN, id, data => {
+                $('#link_back').attr('href', `#/partner/${data.partner.id}`)
+                _editCategoryObserver(TOKEN, id, data)
+                UI.renderEditCategory(data)
             })
         },
 
@@ -3302,6 +4508,14 @@ const partnerController = ((SET, DT, UI, LU) => {
             })
         },
 
+        editBuilding: (TOKEN, id) => {
+            _fetchBuilding(TOKEN, id, data => {
+                $('#link_back').attr('href', `#/partner/${data.partner.id}`)
+                _editBuildingObserver(TOKEN, id, data)
+                UI.renderEditBuilding(data)
+            })
+        },
+
         addProcedure: (TOKEN, id) => {
             _fetchPartner(TOKEN, id, data => {
                 _addProcedureObserver(TOKEN, id, data)
@@ -3317,6 +4531,17 @@ const partnerController = ((SET, DT, UI, LU) => {
             })
         },
 
+        editProcedure: (TOKEN, id) => {
+
+            UI.resetCount()
+
+            _fetchProcedure(TOKEN, id, data => {
+                $('#link_back').attr('href', `#/partner/${data.partner.id}`)
+                _editProcedureObserver(TOKEN, id, data)
+                UI.renderEditProcedure(data)
+            })
+        },
+
         addEquipment: (TOKEN, id) => {
             _fetchPartner(TOKEN, id, data => {
                 _addEquipmentObserver(TOKEN, id, data)
@@ -3326,10 +4551,17 @@ const partnerController = ((SET, DT, UI, LU) => {
 
         detailEquipment: (TOKEN, id) => {
             _fetchEquipment(TOKEN, id, data => {
-                console.log(data)
                 $('#link_back').attr('href', `#/partner/${data.building.partner.id}`)
                 _detailEquipmentObserver(TOKEN, id, data)
                 UI.renderDetailEquipment(data)
+            })
+        },
+
+        editEquipment: (TOKEN, id) => {
+            _fetchEquipment(TOKEN, id, data => {
+                $('#link_back').attr('href', `#/partner/${data.building.partner.id}`)
+                _editEquipmentObserver(TOKEN, id, data)
+                UI.renderEditEquipment(data)
             })
         },
 

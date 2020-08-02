@@ -27,7 +27,6 @@
         <div class="col-12">
             <div class="card" id="add_container">
                 <div class="card-body">
-
                     <div class="row">
                         <div class="col-md-12">
                             <form id="form_add">

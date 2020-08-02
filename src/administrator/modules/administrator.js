@@ -111,10 +111,257 @@ const administratorUI = ((SET) => {
 
             $('#main_content').html(html)
         },
+
+        renderEdit: data => {
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="contact_name">Full Name</label>
+                                        <input type="text" class="form-control" id="full_name" name="full_name" value="${data.full_name}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pic">Phone</label>
+                                        <input type="text" class="form-control" id="phone" name="phone"  value="${data.phone}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pic">Email</label>
+                                        <input type="text" class="form-control" id="email" name="email" value="${data.user.email}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memo">Address</label>
+                                        <textarea class="form-control" id="address" name="address">${data.address}</textarea>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-6">
+                                            <label for="phone">City</label>
+                                            <select class="form-control" id="city_id" name="city_id">
+                                                <option value="" disabled="" selected="">-- Choose --</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="fax">Province</label>
+                                            <select class="form-control" id="province_id" name="province_id">
+                                                <option value="" disabled="" selected="">-- Choose --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="memo">Other Information</label>
+                                        <textarea class="form-control" id="other_information" name="other_information">${SET.replaceNull(data.other_information)}</textarea>
+                                    </div>
+                                        
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="picture">Picture</label>
+                                        <input type="file" class="dropify" name="photo" id="photo" ${data.photo === null ? '' : `data-default-file="${SET.apiURL()}administrator/file/${data.photo}`}">
+                                    </div>
+                                    
+                                    <fieldset>
+                                        <legend>Account</legend>
+                                        <div class="form-group">
+                                            <label for="contact_name">Username</label>
+                                            <input type="text" class="form-control" id="username" name="username" value="${data.user.username}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Status</label>
+                                            <select class="form-control" id="active" name="active">
+                                                <option value="">-- Choose --</option>
+                                                <option value="Y">Active</option>
+                                                <option value="N">Inactive</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="contact_name">Level</label>
+                                            <select class="form-control" id="level" name="level">
+                                                <option value="">-- Choose --</option>
+                                                <option value="ADMIN">Admin</option>
+                                                <option value="MANAGER">Manager</option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group text-right">
+                                        <input type="hidden" name="_method" id="_method" value="put">
+                                        <a class="btn btn-md btn-danger" href="#/administrator/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
     }
 })(settingController)
 
 const administratorController = ((SET, DT, UI, LU) => {
+
+    const _editObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                $('.dropify').dropify();
+
+                $('#active').val(data.user.active)
+                $('#level').val(data.level)
+
+                $('#city_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}city`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.city
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                let option = new Option(data.city.city, data.city.id, true, true);
+                $('#city_id').append(option).trigger('change');
+
+                $('#province_id').select2({
+                    dropdownParent: $('.container-fluid'),
+                    ajax: {
+                        url: `${SET.apiURL()}province`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: v.province
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        },
+                        cache: true
+                    },
+                });
+
+                let option2 = new Option(data.province.province, data.province.id, true, true);
+                $('#province_id').append(option2).trigger('change');
+
+
+                _submitEdit(TOKEN, id)
+            }
+
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEdit = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                full_name: 'required',
+                phone: 'required',
+                email: 'required',
+                address: 'required',
+                city_id: 'required',
+                province_id: 'required',
+                username: 'required',
+                active: 'required',
+                level: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}administrator/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/administrator/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
 
     const _openDelete = parent => {
         $(parent).on('click', '.btn-delete', function () {
@@ -564,6 +811,13 @@ const administratorController = ((SET, DT, UI, LU) => {
             _fetchAdministrator(TOKEN, id, data => {
                 _detailObserver(TOKEN, id, data)
                 UI.renderDetail(data)
+            })
+        },
+
+        edit: (TOKEN, id) => {
+            _fetchAdministrator(TOKEN, id, data => {
+                _editObserver(TOKEN, id, data)
+                UI.renderEdit(data)
             })
         }
     }

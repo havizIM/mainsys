@@ -70,11 +70,6 @@ $route['administrator/engineer/add'] = 'administrator/page/engineer/add';
 $route['administrator/engineer/(:num)'] = 'administrator/page/engineer/detail/$1';
 $route['administrator/engineer/edit/(:num)'] = 'administrator/page/engineer/edit/$1';
 
-$route['administrator/partner'] = 'administrator/page/partner';
-$route['administrator/partner/add'] = 'administrator/page/partner/add';
-$route['administrator/partner/(:num)'] = 'administrator/page/partner/detail/$1';
-$route['administrator/partner/edit/(:num)'] = 'administrator/page/partner/edit/$1';
-
 $route['administrator/partner/(:num)/user/add'] = 'administrator/page/PartnerUser/add/$1';
 $route['administrator/partner/(:num)/category/add'] = 'administrator/page/Category/add/$1';
 $route['administrator/partner/(:num)/building/add'] = 'administrator/page/Building/add/$1';
@@ -86,6 +81,17 @@ $route['administrator/partner/category/(:num)'] = 'administrator/page/Category/d
 $route['administrator/partner/building/(:num)'] = 'administrator/page/Building/detail/$1';
 $route['administrator/partner/procedure/(:num)'] = 'administrator/page/Procedure/detail/$1';
 $route['administrator/partner/equipment/(:num)'] = 'administrator/page/Equipment/detail/$1';
+
+$route['administrator/partner/user/edit/(:num)'] = 'administrator/page/PartnerUser/edit/$1';
+$route['administrator/partner/category/edit/(:num)'] = 'administrator/page/Category/edit/$1';
+$route['administrator/partner/building/edit/(:num)'] = 'administrator/page/Building/edit/$1';
+$route['administrator/partner/procedure/edit/(:num)'] = 'administrator/page/Procedure/edit/$1';
+$route['administrator/partner/equipment/edit/(:num)'] = 'administrator/page/Equipment/edit/$1';
+
+$route['administrator/partner'] = 'administrator/page/partner';
+$route['administrator/partner/add'] = 'administrator/page/partner/add';
+$route['administrator/partner/(:num)'] = 'administrator/page/partner/detail/$1';
+$route['administrator/partner/edit/(:num)'] = 'administrator/page/partner/edit/$1';
 
 
 $route['administrator/work_order'] = 'administrator/page/WorkOrder';
