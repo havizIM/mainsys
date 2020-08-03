@@ -172,10 +172,218 @@ const correctiveScheduleUI = ((SET) => {
 
             $('#main_content').html(html)
         },
+        renderEdit: (data, engineer) => {
+            let no = 1;
+
+            let html = `
+                <div class="row">
+                    <div class="col-md-12">
+                        <form id="form_edit">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <fieldset>
+                                        <legend><u>Schedule</u></legend>
+
+                                        <div class="form-group">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control" id="date" name="date" value="${data.date}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="time">Time</label>
+                                            <input type="time" class="form-control" id="time" name="time" value="${SET.filterNull(data.estimate)}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="estimate">Estimate</label>
+                                            <input type="text" class="form-control" id="estimate" name="estimate" value="${data.estimate}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="shift">Shift</label>
+                                            <input type="text" class="form-control" id="shift" name="shift" value="${SET.filterNull(data.shift)}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" id="description" name="description">${SET.filterNull(data.description)}</textarea>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body bg-info text-white">
+                                            <fieldset>
+                                                <legend><u>Work Order Detail</u></legend>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div><b>Work Order Number</b></div>
+                                                            <div><a class="text-white" href="#/work_order/${data.corrective[0].work_order.id}">${SET.replaceNull(data.corrective[0].work_order.wo_number)}</a></div>
+                                                            <input type="hidden" name="work_order_id" id="work_order_id" value="${data.corrective[0].work_order.id}">
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div><b>Partner</b></div>
+                                                            <div>${SET.replaceNull(data.building.partner.partner_name)}</div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div><b>Building</b></div>
+                                                            <div>${SET.replaceNull(`${data.building.building_code} / ${data.building.building_name}`)}</div>
+                                                            <input type="hidden" name="building_id" id="building_id" value="${data.building.id}">
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        <legend><u>Create Teams</u></legend>
+                                        <select id="engineer" name="engineer" multiple="multiple" size="10" class="duallistbox" required>
+                                            ${engineer.length !== 0 ? engineer.map(v => {
+                                                return `<option value="${v.id}" ${data.teams.filter(x => x.engineer.id === v.id).length !== 0 ? 'selected' : ''}>${v.full_name}</option>`
+                                            }).join('') : ''}
+                                        </select>
+                                    </fieldset>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="text-right mt-3">
+                                        <a class="btn btn-md btn-danger" href="#/corrective_schedule/${data.id}">Cancel</a>
+                                        <button class="btn btn-md btn-success" type="submit">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `
+
+            $('#main_content').html(html)
+        },
     }
 })(settingController)
 
 const correctiveScheduleController = ((SET, DT, UI, LU) => {
+
+    const _editObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+
+            if (container.contains($('.duallistbox')[0])) {
+                $('.duallistbox').bootstrapDualListbox();
+
+                var customSettings = $('.duallistbox').bootstrapDualListbox('getContainer');
+                customSettings.find('.moveall i').removeClass().addClass('fa fa-angle-double-right').next().remove();
+                customSettings.find('.removeall i').removeClass().addClass('fa fa-angle-double-left').next().remove();
+            }
+
+            if (container.contains($('#form_edit')[0])) {
+                _submitEdit(TOKEN, id);
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEdit = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                date: 'required',
+                estimate: 'required',
+                engineer: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}corrective_schedule/${id}`,
+                    type: 'PUT',
+                    dataType: 'JSON',
+                    data: {
+                        date: $('#date').val(),
+                        time: $('#time').val(),
+                        estimate: $('#estimate').val(),
+                        building_id: $('#building_id').val(),
+                        work_order_id: $('#work_order_id').val(),
+                        shift: $('#shift').val(),
+                        description: $('#description').val(),
+                        engineer: $('#engineer').val(),
+                    },
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/corrective_schedule/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
+    const _fetchEngineer = (TOKEN, callback) => {
+        $.ajax({
+            url: `${SET.apiURL()}engineer`,
+            type: 'GET',
+            dataType: 'JSON',
+            beforeSend: xhr => {
+                xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+            },
+            success: res => {
+                callback(res.results)
+            },
+            error: ({ responseJSON }) => {
+                toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+            },
+            statusCode: {
+                404: () => {
+                    $('#app_content').load(`${SET.baseURL()}data_not_found`)
+                },
+                401: err => {
+                    let error = err.responseJSON
+
+                    if (error.message === 'Unauthenticated.') {
+                        $('#app_content').load(`${SET.baseURL()}unauthenticated`)
+                    }
+
+                    if (error.message === 'Unauthorized.') {
+                        $('#app_content').load(`${SET.baseURL()}unauthorized`)
+                    }
+                }
+            },
+            complete: () => {
+
+            }
+        })
+    }
 
     const _openDelete = parent => {
         $(parent).on('click', '.btn-delete', function () {
@@ -647,9 +855,17 @@ const correctiveScheduleController = ((SET, DT, UI, LU) => {
         detail: (TOKEN, id) => {
 
             _fetchCorrectiveSchedule(TOKEN, id, data => {
-                console.log(data)
                 _detailObserver(TOKEN, id, data)
                 UI.renderDetail(data)
+            })
+        },
+        
+        edit: (TOKEN, id) => {
+            _fetchCorrectiveSchedule(TOKEN, id, data => {
+                _fetchEngineer(TOKEN, engineer => {
+                    _editObserver(TOKEN, id, data)
+                    UI.renderEdit(data, engineer)
+                })
             })
         }
     }

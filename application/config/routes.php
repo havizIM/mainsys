@@ -100,10 +100,12 @@ $route['administrator/work_order/(:num)/create_schedule'] = 'administrator/page/
 
 $route['administrator/preventive_schedule'] = 'administrator/page/PreventiveSchedule';
 $route['administrator/preventive_schedule/(:num)'] = 'administrator/page/PreventiveSchedule/detail/$1';
+$route['administrator/preventive_schedule/edit/(:num)'] = 'administrator/page/PreventiveSchedule/edit/$1';
 $route['administrator/preventive_schedule/add'] = 'administrator/page/PreventiveSchedule/add';
 
 $route['administrator/corrective_schedule'] = 'administrator/page/CorrectiveSchedule';
 $route['administrator/corrective_schedule/(:num)'] = 'administrator/page/CorrectiveSchedule/detail/$1';
+$route['administrator/corrective_schedule/edit/(:num)'] = 'administrator/page/CorrectiveSchedule/edit/$1';
 
 $route['administrator/preventive_report'] = 'administrator/page/PreventiveReport';
 $route['administrator/preventive_report/(:num)'] = 'administrator/page/PreventiveReport/detail/$1';
@@ -163,6 +165,7 @@ $route['partner/equipment/(:num)'] = 'partner/page/equipment/detail/$1';
 
 $route['partner/work_order'] = 'partner/page/WorkOrder';
 $route['partner/work_order/add'] = 'partner/page/WorkOrder/add';
+$route['partner/work_order/edit/(:num)'] = 'partner/page/WorkOrder/edit/$1';
 $route['partner/work_order/(:num)'] = 'partner/page/WorkOrder/detail/$1';
 
 $route['partner/preventive_schedule'] = 'partner/page/PreventiveSchedule';

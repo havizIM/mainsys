@@ -1,7 +1,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">Edit Work Order</h4>
+            <h4 class="page-title">Edit Preventive Schedule</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
@@ -11,8 +11,9 @@
                             <a href="#/dashboard">Dashboard</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="#/work_order">Work Order</a>
+                            <a id="#/preventive_schedule">Preventive Schedule</a>
                         </li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit</li>
                         <li class="breadcrumb-item active" aria-current="page"><?= $id ?></li>
                     </ol>
                 </nav>
@@ -39,10 +40,11 @@
 </div>
 
 <footer class="footer text-center">
-    Develop Using Framework MIT License Codeigniter copyright (c) 2014 - 2019. British Columbia Institute of Technology.
+    All Rights Reserved by Universitas Esa Unggul. Designed and Developed by
+    <a>Ferry Setiawan</a>.
 </footer>
 
 <script type="module">
-    import workOrderController from '<?= base_url() ?>src/partner/modules/work_order.js';
-    workOrderController.edit('<?= $this->session->userdata('api_token') ?>', <?= $id ?>)
+    import preventiveScheduleController from '<?= base_url() ?>src/administrator/modules/preventive_schedule.js';
+    preventiveScheduleController.edit('<?= $this->session->userdata('api_token') ?>', <?= $id ?>)
 </script>

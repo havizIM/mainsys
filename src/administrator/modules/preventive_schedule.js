@@ -173,10 +173,332 @@ const preventiveScheduleUI = ((SET) => {
 
             $('#main_content').html(html)
         },
+        renderEdit: data => {
+            let no = 1;
+
+            let html = `
+                <form class="form-horizontal" id="form_edit">
+                    <div class="card-body">
+                        <h4 class="card-title">Schedule</h4>
+                        <div class="form-group row">
+                            <label for="building_id" class="col-sm-3 text-right control-label col-form-label">Partner</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="partner_id" name="partner_id">
+                                    <option value="" disabled="" selected="">-- Choose Partner --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="building_id" class="col-sm-3 text-right control-label col-form-label">Building</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="building_id" name="building_id">
+                                    <option value="" disabled="" selected="">-- Choose Building --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-3 text-right control-label col-form-label">Date</label>
+                            <div class="col-sm-9">
+                                <input type="date" name="date" id="date" class="form-control" value="${data.date}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-3 text-right control-label col-form-label">Time</label>
+                            <div class="col-sm-9">
+                                <input type="time" name="time" id="time" class="form-control" value="${SET.filterNull(data.time)}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-3 text-right control-label col-form-label">Estimate</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="estimate" id="estimate" class="form-control" value="${data.estimate}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-3 text-right control-label col-form-label">Shift</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="shift" id="shift" class="form-control" value="${SET.filterNull(data.shift)}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-3 text-right control-label col-form-label">Description</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="description" name="description" rows="10">${SET.filterNull(data.description)}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="card-body">
+                        <div class="row pb-2">
+                            <div class="col-md-6 text-left">
+                                <h4 class="card-title">Teams</h4>
+                            </div>   
+                        </div>
+                        <select id="engineer" name="engineer" multiple="multiple" size="10" class="duallistbox" required>
+                            
+                        </select>
+                        
+                    </div>
+
+                    <hr>
+
+                    <div class="card-body">
+                        <div class="row pb-2">
+                            <div class="col-md-6 text-left">
+                                <h4 class="card-title">Equipment</h4>
+                            </div>   
+                        </div>
+
+                        <select id="equipment" name="equipment" multiple="multiple" size="10" class="duallistbox" required>
+                            
+                        </select>
+                    </div>
+
+                    <hr>
+
+                    <div class="card-body">
+                        <div class="form-group m-b-0 text-right">
+                            <a href="#/work_order" class="btn btn-dark waves-effect waves-light">Cancel</a>
+                            <button type="submit" class="btn btn-success waves-effect waves-light">Update</button>
+                        </div>
+                    </div>
+                </form>
+            `
+
+            $('#main_content').html(html)
+        },
     }
 })(settingController)
 
 const preventiveScheduleController = ((SET, DT, UI, LU) => {
+
+    const _editObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+
+            if (container.contains($('#form_edit')[0])) {
+                $('#partner_id').select2({
+                    ajax: {
+                        url: `${SET.apiURL()}partner`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: `${v.partner_name}`,
+                                }
+
+                                filtered.push(obj)
+                            })
+                            return {
+                                results: filtered
+                            };
+                        }
+
+                    }
+                })
+
+                let option = new Option(data.building.partner.partner_name, data.building.partner.id, true, true);
+                $('#partner_id').append(option).trigger('change');
+
+                $('#building_id').select2({
+                    ajax: {
+                        url: `${SET.apiURL()}building`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                                partner: data.building.partner.id
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: `${v.building_code} / ${v.building_name}`,
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        }
+                    }
+                })
+
+                let option2 = new Option(`${data.building.building_code} / ${data.building.building_name}`, data.building.id, true, true);
+                $('#building_id').append(option2).trigger('change');
+
+                $('#engineer').bootstrapDualListbox();
+                var engineerSetting = $('#engineer').bootstrapDualListbox('getContainer');
+                engineerSetting.find('.moveall i').removeClass().addClass('fa fa-angle-double-right').next().remove();
+                engineerSetting.find('.removeall i').removeClass().addClass('fa fa-angle-double-left').next().remove()
+
+                $('#equipment').bootstrapDualListbox();
+                var equipmentSetting = $('#equipment').bootstrapDualListbox('getContainer');
+                equipmentSetting.find('.moveall i').removeClass().addClass('fa fa-angle-double-right').next().remove();
+                equipmentSetting.find('.removeall i').removeClass().addClass('fa fa-angle-double-left').next().remove()
+
+                _fetchEngineer(TOKEN, engineer => {
+                    let html = '';
+
+                    if (engineer.length !== 0) {
+                        engineer.map(v => {
+                            html += `
+                                <option value="${v.id}" ${data.teams.filter(x => x.engineer.id === v.id).length !== 0 ? 'selected' : ''}>${v.full_name}</option>
+                            `
+                        }).join('');
+
+                    } else {
+                        html += ''
+                    }
+
+                    $('#engineer').html(html)
+                    $('#engineer').bootstrapDualListbox('refresh', true);
+                })
+
+                _fetchEquipment(TOKEN, equipment => {
+                    let html = ''
+
+                    if (equipment.length !== 0) {
+                        let filtered = equipment.filter(y => y.building.id === data.building.id);
+
+                        filtered.forEach(v => {
+                            html += `
+                                <option value="${v.id}" ${data.preventives.filter(z => z.equipment.id === v.id).length !== 0 ? 'selected' : ''}>${v.sku} / ${v.equipment_name} / ${v.category.category_name}</option>
+                            `
+                        });
+
+                    } else {
+                        html += ''
+                    }
+
+                    $('#equipment').html(html)
+                    $('#equipment').bootstrapDualListbox('refresh', true);
+                })
+
+                _onChangePartner(TOKEN)
+
+                _onChangeBuilding(id => {
+                    _fetchEquipment(TOKEN, data => {
+                        let html = ''
+
+                        if (data.length !== 0) {
+                            let filtered = data.filter(y => y.building.id === id);
+
+                            filtered.forEach(v => {
+                                html += `
+                                <option value="${v.id}">${v.sku} / ${v.equipment_name} / ${v.category.category_name}</option>
+                            `
+                            });
+
+                        } else {
+                            html += ''
+                        }
+
+                        $('#equipment').html(html)
+                        $('#equipment').bootstrapDualListbox('refresh', true);
+                    })
+                })
+
+                _submitEdit(TOKEN, id)
+            }
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEdit = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                partner_id: 'required',
+                building_id: 'required',
+                date: 'required',
+                estimate: 'required',
+                engineer: 'required',
+                equipment: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}preventive_schedule/${id}`,
+                    type: 'PUT',
+                    dataType: 'JSON',
+                    data: {
+                        date: $('#date').val(),
+                        time: $('#time').val(),
+                        estimate: $('#estimate').val(),
+                        building_id: $('#building_id').val(),
+                        shift: $('#shift').val(),
+                        description: $('#description').val(),
+                        engineer: $('#engineer').val(),
+                        equipment: $('#equipment').val(),
+                    },
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/preventive_schedule/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
+
     const _openDelete = parent => {
         $(parent).on('click', '.btn-delete', function () {
             let id = $(this).data('id')
@@ -798,6 +1120,13 @@ const preventiveScheduleController = ((SET, DT, UI, LU) => {
             _fetchPreventiveSchedule(TOKEN, id, data => {
                 _detailObserver(TOKEN, id, data)
                 UI.renderDetail(data)
+            })
+        },
+
+        edit: (TOKEN, id) => {
+            _fetchPreventiveSchedule(TOKEN, id, data => {
+                _editObserver(TOKEN, id, data)
+                UI.renderEdit(data)
             })
         },
 

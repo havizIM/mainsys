@@ -33,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="work_order_container">
                     <h4 class="card-title">Work Order</h4>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="preventive_report_container">
                     <h4 class="card-title">Preventive Report</h4>
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="corrective_report_container">
                     <h4 class="card-title">Corrective Report</h4>

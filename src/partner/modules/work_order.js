@@ -122,11 +122,230 @@ const administratorUI = ((SET) => {
 
             $('#t_add_photo').append(html)
             $('#photo_'+count).dropify()
-        }
+        },
+        renderEdit: data => {
+
+            let html = `
+                <form class="form-horizontal" id="form_edit">
+                    <div class="card-body">
+                        <h4 class="card-title">Partner Info</h4>
+                        <div class="form-group row">
+                            <label for="building_id" class="col-sm-3 text-right control-label col-form-label">Building</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="building_id" name="building_id">
+                                    <option value="" disabled="" selected="">-- Choose Building --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="equipment_id" class="col-sm-3 text-right control-label col-form-label">Equipment</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="equipment_id" name="equipment_id" >
+                                    <option value="" disabled="" selected="">-- Choose Equipment --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="date" class="col-sm-3 text-right control-label col-form-label">Date</label>
+                            <div class="col-sm-9">
+                                <input type="date" name="date" id="date" class="form-control" value="${data.date}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="description" class="col-sm-3 text-right control-label col-form-label">Description</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="description" name="description" rows="15">${data.description}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="row pb-2">
+                            <div class="col-md-6 text-left">
+                                <h4 class="card-title">Photos</h4>
+                            </div>    
+                            <div class="col-md-6 text-right">
+                                <button type="button" class="btn btn-info btn-small btn_add_row" id="btn_add_row"><i class="fa fa-plus"></i></button>
+                            </div>    
+                        </div>
+
+                        <table class="table" id="t_add_photo">
+                            <tr id="row_0">
+                                <td>
+                                    <div class="form-group">
+                                        <input type="file" class="dropify" name="photo[0]" id="photo_0" required>
+                                    </div>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="form-group m-b-0 text-right">
+                            <input type="hidden" name="_method" id="_method" value="put">
+                            <a class="btn btn-md btn-danger" href="#/engineer">Cancel</a>
+                            <button class="btn btn-md btn-success" type="submit">Update</button>
+                        </div>
+                    </div>
+                </form>
+            `
+
+            $('#main_content').html(html)
+        },
     }
 })(settingController)
 
 const administratorController = ((SET, DT, UI, LU) => {
+    const _editObserver = (TOKEN, id, data) => {
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+        let container = document.querySelector("#edit_container")
+
+        let observer = new MutationObserver(function (mutations, observer) {
+            if (container.contains($('#form_edit')[0])) {
+                $('.dropify').dropify()
+
+                $('#building_id').select2({
+                    ajax: {
+                        url: `${SET.apiURL()}building`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: `${v.building_code} / ${v.building_name}`,
+                                }
+
+                                filtered.push(obj)
+                            })
+                            return {
+                                results: filtered
+                            };
+                        }
+
+                    }
+                })
+
+                let option = new Option(`${data.building.building_code} / ${data.building.building_name}`, data.building.id, true, true);
+                $('#building_id').append(option).trigger('change');
+
+                $('#equipment_id').select2({
+                    ajax: {
+                        url: `${SET.apiURL()}equipment`,
+                        dataType: 'JSON',
+                        type: 'GET',
+                        headers: {
+                            "Authorization": "Bearer " + TOKEN,
+                            "Content-Type": "application/json",
+                        },
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                limit: 100,
+                                building: data.building.id
+                            }
+
+                            return query;
+                        },
+                        processResults: function (data) {
+                            let filtered = [];
+
+                            data.results.map(v => {
+                                let obj = {
+                                    id: v.id,
+                                    text: `${v.sku} / ${v.equipment_name}`,
+                                }
+
+                                filtered.push(obj)
+                            })
+
+                            return {
+                                results: filtered
+                            };
+                        }
+                    }
+                })
+
+                if(data.equipment !== null){
+                    let option2 = new Option(`${data.equipment.sku} / ${data.equipment.equipment_name}`, data.equipment.id, true, true);
+                    $('#equipment_id').append(option2).trigger('change');
+                }
+
+                _onChangeBuilding(TOKEN)
+                _addRow()
+                _removeRow()
+
+                _submitEdit(TOKEN, id)
+            }
+
+
+            observer.disconnect();
+        });
+
+        observer.observe(container, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+        });
+    }
+
+    const _submitEdit = (TOKEN, id) => {
+        $('#form_edit').validate({
+            errorClass: 'is-invalid',
+            successClass: 'is-valid',
+            validClass: 'is-valid',
+            errorElement: 'div',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element)
+            },
+            rules: {
+                building_id: 'required',
+                date: 'required',
+                description: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.apiURL()}work_order/${id}`,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        xhr.setRequestHeader("Authorization", "Bearer " + TOKEN)
+
+                        SET.contentLoader('#edit_container')
+                    },
+                    success: res => {
+                        toastr.success(res.message, 'Success', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                        location.hash = `#/work_order/${res.results.id}`
+                    },
+                    error: ({ responseJSON }) => {
+                        toastr.error(responseJSON.message, 'Failed', { "progressBar": true, "closeButton": true, "positionClass": 'toast-bottom-right' });
+                    },
+                    complete: () => {
+                        SET.closeSelectedElement('#edit_container')
+                    }
+                })
+            }
+        })
+    }
 
     const _openDelete = parent => {
         $(parent).on('click', '.btn-delete', function () {
@@ -588,12 +807,20 @@ const administratorController = ((SET, DT, UI, LU) => {
         detail: (TOKEN, id) => {
 
             _fetchWorkOrder(TOKEN, id, data => {
-                console.log(data)
                 _detailObserver(TOKEN, id, data)
                 UI.renderDetail(data)
             })
 
             _printAll()
+        },
+
+        edit: (TOKEN, id) => {
+            UI.resetCount()
+
+            _fetchWorkOrder(TOKEN, id, data => {
+                _editObserver(TOKEN, id, data)
+                UI.renderEdit(data)
+            })
         },
 
         add: TOKEN => {

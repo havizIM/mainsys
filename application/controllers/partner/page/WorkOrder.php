@@ -30,4 +30,10 @@ class WorkOrder extends CI_Controller {
 		$data['id'] = $id;
 		$this->load->view('partner/work_order/detail', $data);
     }
+
+    public function edit($id)
+	{
+		$data['id'] = $id;
+		$this->load->view('partner/work_order/edit', $data);
+    }
 }

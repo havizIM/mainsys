@@ -5,11 +5,7 @@
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
-                <!-- <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-                    </ol>
-                </nav> -->
+            
             </div>
         </div>
     </div>
@@ -17,7 +13,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 col-lg-12">
             <div class="card">
                 <div class="card-body" id="performance_container">
                     <div class="d-flex align-items-center">
@@ -33,7 +29,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="work_order_container">
                     <h4 class="card-title">Work Order</h4>
@@ -41,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="preventive_report_container">
                     <h4 class="card-title">Preventive Report</h4>
@@ -49,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12 col-lg-4">
             <div class="card">
                 <div class="card-body" id="corrective_report_container">
                     <h4 class="card-title">Corrective Report</h4>

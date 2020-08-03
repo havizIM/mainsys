@@ -30,4 +30,10 @@ class PreventiveSchedule extends CI_Controller {
 		$data['id'] = $id;
 		$this->load->view('administrator/schedule/preventive/detail', $data);
     }
+
+    public function edit($id)
+	{
+		$data['id'] = $id;
+		$this->load->view('administrator/schedule/preventive/edit', $data);
+    }
 }

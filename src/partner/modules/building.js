@@ -64,17 +64,9 @@ const buildingUI = ((SET) => {
                                         <p>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <div><b>Longitude</b></div>
-                                                    <div>${SET.replaceNull(data.longitude)}</div>
+                                                    <div><b>Location</b></div>
+                                                    <div>${data.longitude !== null && data.latitude !== null ? `<a target="__blank" href="https://www.google.com/maps/?q=${data.longitude},${data.latitude}">Open Maps <i class="fa fa-map"></i></a>` : '-'}</div>
                                                 </div>
-                                                <div class="col-md-6">
-                                                    <div><b>Latitude</b></div>
-                                                    <div>${SET.replaceNull(data.latitude)}</div>
-                                                </div>
-                                            </div>
-                                        </p>
-                                        <p>
-                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <div><b>Other Information</b></div>
                                                     <div>${SET.replaceNull(data.other_information)}</div>

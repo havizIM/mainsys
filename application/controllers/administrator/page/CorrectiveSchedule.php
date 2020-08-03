@@ -25,4 +25,10 @@ class CorrectiveSchedule extends CI_Controller {
 		$data['id'] = $id;
 		$this->load->view('administrator/schedule/corrective/detail', $data);
     }
+
+    public function edit($id)
+	{
+		$data['id'] = $id;
+		$this->load->view('administrator/schedule/corrective/edit', $data);
+    }
 }
